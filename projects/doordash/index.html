@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="DooRDasH, a JavaFX board game by Adam Ibrahim. Explore its class hierarchies, tested game engine, and desktop interface.">
+  <title>DooRDasH · Adam Ibrahim</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="header-inner"><a class="brand" href="../../">Adam Ibrahim</a><nav class="site-nav" aria-label="Main navigation"><a href="../../#about">About</a><details class="nav-menu"><summary>Projects <span aria-hidden="true">▾</span></summary><div class="dropdown"><a href="../../#large-projects">Large projects</a><a href="../../#small-projects">Small projects</a><a href="./" aria-current="page">DooRDasH · case study</a></div></details><a href="../../#skills">Skills</a><a href="https://github.com/doma990">GitHub ↗</a></nav></div></header>
+<div class="documentation-layout"><aside class="project-sidebar"><a class="sidebar-back" href="../../#projects">← All projects</a><p class="sidebar-title">DooRDasH</p><p class="meta">LARGE PROJECT</p><nav aria-label="Project sections"><a href="#project-name">Overview</a><a href="#class-design">01 · Classes &amp; hierarchies</a><a href="#game-engine">02 · Game logic</a><a href="#interface">03 · JavaFX GUI</a><a href="#play">Instructions &amp; setup</a></nav><a class="sidebar-source" href="https://github.com/doma990/doordash-board-game">View on GitHub ↗</a></aside><main class="case-study" id="main">
+  <section class="intro case-intro" aria-labelledby="project-name">
+    <a class="back-link" href="../../#large-projects">← Back to large projects</a>
+    <p class="eyebrow">LARGE PROJECT · CSEN 401 · FEB — MAY 2026</p>
+    <h1 id="project-name">DooRDasH<span>.</span></h1>
+    <p class="lead">Scare vs Laugh Touchdown.</p>
+    <p class="summary">A local, turn-based board game inspired by <i>Monsters, Inc.</i> Two monsters compete across a 100-cell factory floor, balancing movement, energy, and special abilities to reach Boo’s Door.</p>
+    <ul class="tags" aria-label="Project technologies"><li>Java</li><li>JavaFX</li><li>Object-oriented programming</li><li>JUnit 4</li></ul>
+    <div class="intro-links"><a class="link" href="https://github.com/doma990/doordash-board-game">Source on GitHub ↗</a><a class="link" href="#play">Instructions &amp; setup ↓</a></div>
+  </section>
+
+  <figure class="game-preview">
+    <img src="../../assets/doordash-gameplay.png" alt="DooRDasH running on Windows: a board between two character panels, with dice controls and a turn-by-turn action log." width="1003" height="709" fetchpriority="high">
+    <figcaption>The playable JavaFX interface: board, character state, and action log in one view.</figcaption>
+  </figure>
+
+  
+
+  <section aria-labelledby="overview-title">
+    <h2 id="overview-title">The project</h2>
+    <p>I led the design and implementation across three development milestones: modeling the game's objects, implementing its rules, and connecting those rules to a graphical interface.</p>
+    <p>The central design challenge is making different characters, cards, and board cells interact consistently, while keeping the game state clear to the players.</p>
+    <dl class="project-facts"><div><dt>Format</dt><dd>Two players, one computer</dd></div><div><dt>Objective</dt><dd>Reach cell 99 with at least 1,000 energy</dd></div><div><dt>Verification</dt><dd>165 JUnit tests; builds checked on Windows, macOS, and Linux</dd></div></dl>
+  </section>
+
+  <section id="class-design" aria-labelledby="class-title">
+    <p class="eyebrow">DESIGN LEVEL 01</p>
+    <h2 id="class-title">Classes and hierarchies</h2>
+    <p>Three class families model the world. Base classes hold shared state and behavior, while subclasses define the character abilities, card actions, and landing effects that make each type different.</p>
+    <div class="class-model" aria-label="Three main class hierarchies">
+      <div><h3><a href="https://github.com/doma990/doordash-board-game/blob/main/src/game/engine/monsters/Monster.java">Monster ↗</a></h3><p class="meta">ABSTRACT BASE CLASS</p><ul><li>Dasher</li><li>Dynamo</li><li>MultiTasker</li><li>Schemer</li></ul></div>
+      <div><h3><a href="https://github.com/doma990/doordash-board-game/blob/main/src/game/engine/cards/Card.java">Card ↗</a></h3><p class="meta">ABSTRACT BASE CLASS</p><ul><li>SwapperCard</li><li>EnergyStealCard</li><li>StartOverCard</li><li>ShieldCard</li><li>ConfusionCard</li></ul></div>
+      <div><h3><a href="https://github.com/doma990/doordash-board-game/blob/main/src/game/engine/cells/Cell.java">Cell ↗</a></h3><p class="meta">BASE CLASS</p><ul><li>DoorCell</li><li>MonsterCell</li><li>CardCell</li><li>TransportCell<ul><li>ConveyorBelt</li><li>ContaminationSock</li></ul></li></ul></div>
+    </div>
+    <p>Polymorphism lets the board call <code>onLand</code> without defining every cell effect itself. Cards follow the same idea through <code>performAction</code>. A small <code>CanisterModifier</code> interface provides a shared contract for energy-changing effects.</p>
+  </section>
+
+  <section id="game-engine" aria-labelledby="engine-title">
+    <p class="eyebrow">DESIGN LEVEL 02</p>
+    <h2 id="engine-title">Solid code and game logic</h2>
+    <p>The engine separates turn management, movement, and data loading. It has no JavaFX dependency, allowing the rules to be tested independently of the interface.</p>
+    <dl class="responsibilities"><div><dt><code>Game</code></dt><dd>Player setup, turn order, power-up activation, and victory checks.</dd></div><div><dt><code>Board</code></dt><dd>Grid initialization, movement, card draws, and cell interactions.</dd></div><div><dt><code>DataLoader</code></dt><dd>Character, card, and board-cell definitions loaded from CSV files.</dd></div></dl>
+    <p>Private fields encapsulate character state. Specialized methods handle different behaviors, and custom exceptions represent invalid moves, insufficient energy, and malformed input. The 165 original JUnit tests cover model and engine behavior.</p>
+    <a class="link" href="https://github.com/doma990/doordash-board-game/tree/main/src/game/tests">Browse the tests ↗</a>
+  </section>
+
+  <section id="interface" aria-labelledby="interface-title">
+    <p class="eyebrow">DESIGN LEVEL 03</p>
+    <h2 id="interface-title">JavaFX GUI</h2>
+    <p><code>GameView</code> builds the screens and visual effects. <code>GameController</code> handles input, calls the engine, and updates what the players see.</p>
+    <ul class="feature-list"><li>A role-selection menu, instructions, and music controls.</li><li>An animated 10 × 10 board with character images and transport connections.</li><li>Character panels showing positions, energy, and status effects.</li><li>Dice and power-up controls, a turn indicator, and a last-card display.</li><li>An action log explaining each turn and a dedicated victory screen.</li></ul>
+    <a class="link" href="https://github.com/doma990/doordash-board-game/tree/main/src/game/view">Explore the interface code ↗</a>
+  </section>
+
+  <section class="play-section" id="play" aria-labelledby="play-title">
+    <p class="eyebrow">TRY THE PROJECT</p>
+    <h2 id="play-title">Play it on your computer</h2>
+    <p>Choose Scarer or Laugher, roll the dice, and use cards and power-ups to collect energy. The first player to reach cell 99 with at least 1,000 energy wins.</p>
+    <div class="resource-links">
+      <a href="https://github.com/doma990/doordash-board-game/blob/main/docs/GAMEPLAY.md"><span><strong>Game instructions</strong><small>Turn sequence, characters, board cells, and cards.</small></span><span aria-hidden="true">↗</span></a>
+      <a href="https://github.com/doma990/doordash-board-game#how-to-run"><span><strong>How to run · Windows, macOS &amp; Linux</strong><small>JDK 21 and one launch command for your system.</small></span><span aria-hidden="true">↗</span></a>
+      <a href="https://github.com/doma990/doordash-board-game/archive/refs/heads/main.zip"><span><strong>Download the complete project</strong><small>Source code, game data, and media assets in a ZIP.</small></span><span aria-hidden="true">↓</span></a>
+    </div>
+    <p class="project-note">This is a Java desktop game. Download and run it locally; the portfolio documents the project. The game’s characters, imagery, and music belong to their respective owners.</p>
+  </section>
+  <div class="project-return"><a class="link" href="../../#projects">← Browse all projects</a><a class="link" href="mailto:adam04668@gmail.com">Get in touch ↗</a></div>
+</main></div>
+<footer class="site-footer"><span>© <span id="year">2026</span> Adam Ibrahim</span><a href="../../#projects">Browse all projects →</a></footer>
+<script src="../../script.js"></script>
+</body>
+</html>
