@@ -33,3 +33,12 @@
 ::view-transition-old(root){z-index:1}
 ::view-transition-new(root){z-index:2}
 
+
+/* Type the introduction once while preserving its full layout width. */
+.greeting-typewriter{position:relative;display:inline-block;white-space:nowrap}
+.greeting-text{display:block;animation:greeting-type 2s steps(20,end) .2s both}
+.greeting-typewriter::after{content:"";position:absolute;left:0;top:50%;width:2px;height:1.05em;background:currentColor;transform:translateY(-50%);animation:greeting-cursor-travel 2s steps(20,end) .2s forwards,greeting-cursor-blink .8s step-end infinite}
+@keyframes greeting-type{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes greeting-cursor-travel{from{left:0}to{left:100%}}
+@keyframes greeting-cursor-blink{0%,100%{opacity:1}50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.greeting-text{clip-path:none;animation:none}.greeting-typewriter::after{display:none}}
