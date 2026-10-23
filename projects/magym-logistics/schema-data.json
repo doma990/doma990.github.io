@@ -1,0 +1,484 @@
+[
+  {
+    "name": "User",
+    "domain": "accounts",
+    "description": "Shared identity for every account. The full name is stored as first, middle, and last name.",
+    "fields": [
+      "user_id",
+      "first_name",
+      "middle_name",
+      "last_name",
+      "username",
+      "email",
+      "password"
+    ],
+    "pk": [
+      "user_id"
+    ],
+    "fk": {},
+    "derived": []
+  },
+  {
+    "name": "User_Phones",
+    "domain": "accounts",
+    "description": "Separates the multivalued contact numbers from the account.",
+    "fields": [
+      "user_id",
+      "phone"
+    ],
+    "pk": [
+      "user_id",
+      "phone"
+    ],
+    "fk": {
+      "user_id": "User"
+    },
+    "derived": []
+  },
+  {
+    "name": "Admin",
+    "domain": "accounts",
+    "description": "An account with an administrative role: Super Admin or Zone Admin.",
+    "fields": [
+      "user_id",
+      "role"
+    ],
+    "pk": [
+      "user_id"
+    ],
+    "fk": {
+      "user_id": "User"
+    },
+    "derived": []
+  },
+  {
+    "name": "Super_Admin_Assigns_Zone_Admin",
+    "domain": "accounts",
+    "description": "Records assignments between administrative accounts.",
+    "fields": [
+      "super_admin_id",
+      "zone_admin_id"
+    ],
+    "pk": [
+      "super_admin_id",
+      "zone_admin_id"
+    ],
+    "fk": {
+      "super_admin_id": "Admin",
+      "zone_admin_id": "Admin"
+    },
+    "derived": []
+  },
+  {
+    "name": "Zone_Admins_Manage_Businesses",
+    "domain": "accounts",
+    "description": "Associates zone administrators with the businesses they manage.",
+    "fields": [
+      "zone_admin_id",
+      "business_id"
+    ],
+    "pk": [
+      "zone_admin_id",
+      "business_id"
+    ],
+    "fk": {
+      "zone_admin_id": "Admin",
+      "business_id": "Business"
+    },
+    "derived": []
+  },
+  {
+    "name": "Zone_Admin_Manage_Users",
+    "domain": "accounts",
+    "description": "Associates zone administrators with the user accounts they manage.",
+    "fields": [
+      "zone_admin_id",
+      "user_id"
+    ],
+    "pk": [
+      "zone_admin_id",
+      "user_id"
+    ],
+    "fk": {
+      "zone_admin_id": "Admin",
+      "user_id": "User"
+    },
+    "derived": []
+  },
+  {
+    "name": "Partner",
+    "domain": "accounts",
+    "description": "Connects a business owner to their business.",
+    "fields": [
+      "user_id",
+      "business_id"
+    ],
+    "pk": [
+      "user_id"
+    ],
+    "fk": {
+      "user_id": "User",
+      "business_id": "Business"
+    },
+    "derived": []
+  },
+  {
+    "name": "Rider",
+    "domain": "accounts",
+    "description": "Keeps vehicle and licensing details with the rider’s assigned zone.",
+    "fields": [
+      "user_id",
+      "plate_number",
+      "vehicle_type",
+      "license_information",
+      "zone_id"
+    ],
+    "pk": [
+      "user_id"
+    ],
+    "fk": {
+      "user_id": "User",
+      "zone_id": "Zone"
+    },
+    "derived": []
+  },
+  {
+    "name": "Customer",
+    "domain": "accounts",
+    "description": "An account with a wallet balance for purchases.",
+    "fields": [
+      "user_id",
+      "wallet_amount"
+    ],
+    "pk": [
+      "user_id"
+    ],
+    "fk": {
+      "user_id": "User"
+    },
+    "derived": []
+  },
+  {
+    "name": "Customer_Cards",
+    "domain": "accounts",
+    "description": "Card records belong to a customer; the customer and card number form the identifier.",
+    "fields": [
+      "customer_id",
+      "card_number",
+      "card_holder_name",
+      "expiration_date"
+    ],
+    "pk": [
+      "customer_id",
+      "card_number"
+    ],
+    "fk": {
+      "customer_id": "Customer"
+    },
+    "derived": []
+  },
+  {
+    "name": "Customer_Addresses",
+    "domain": "accounts",
+    "description": "A customer’s numbered delivery addresses, each located in one zone.",
+    "fields": [
+      "customer_id",
+      "address_number",
+      "description",
+      "zone_id"
+    ],
+    "pk": [
+      "customer_id",
+      "address_number"
+    ],
+    "fk": {
+      "customer_id": "Customer",
+      "zone_id": "Zone"
+    },
+    "derived": []
+  },
+  {
+    "name": "Business",
+    "domain": "catalog",
+    "description": "The shared business profile, operating hours, approval status, and delivery expectations.",
+    "fields": [
+      "business_id",
+      "name",
+      "description",
+      "web_link",
+      "opening_hours",
+      "closing_hours",
+      "approval_status",
+      "expected_delivery_time",
+      "zone_id"
+    ],
+    "pk": [
+      "business_id"
+    ],
+    "fk": {
+      "zone_id": "Zone"
+    },
+    "derived": []
+  },
+  {
+    "name": "Business_Phones",
+    "domain": "catalog",
+    "description": "Stores the multiple contact numbers associated with a business.",
+    "fields": [
+      "business_id",
+      "phone_number"
+    ],
+    "pk": [
+      "business_id",
+      "phone_number"
+    ],
+    "fk": {
+      "business_id": "Business"
+    },
+    "derived": []
+  },
+  {
+    "name": "Restaurant",
+    "domain": "catalog",
+    "description": "A business specialization with food category and cuisine type.",
+    "fields": [
+      "business_id",
+      "food_category",
+      "cuisine_type"
+    ],
+    "pk": [
+      "business_id"
+    ],
+    "fk": {
+      "business_id": "Business"
+    },
+    "derived": []
+  },
+  {
+    "name": "Pharmacy",
+    "domain": "catalog",
+    "description": "A business specialization with its pharmacy type.",
+    "fields": [
+      "business_id",
+      "type"
+    ],
+    "pk": [
+      "business_id"
+    ],
+    "fk": {
+      "business_id": "Business"
+    },
+    "derived": []
+  },
+  {
+    "name": "Product",
+    "domain": "catalog",
+    "description": "A catalog item offered by one business, with pricing, availability, and a discount.",
+    "fields": [
+      "product_id",
+      "name",
+      "description",
+      "category",
+      "base_unit_price",
+      "availability",
+      "discount_amount",
+      "business_id"
+    ],
+    "pk": [
+      "product_id"
+    ],
+    "fk": {
+      "business_id": "Business"
+    },
+    "derived": []
+  },
+  {
+    "name": "Cart",
+    "domain": "ordering",
+    "description": "A customer’s collection of products before checkout.",
+    "fields": [
+      "cart_id",
+      "customer_id"
+    ],
+    "pk": [
+      "cart_id"
+    ],
+    "fk": {
+      "customer_id": "Customer"
+    },
+    "derived": []
+  },
+  {
+    "name": "Cart_Contains_Products",
+    "domain": "ordering",
+    "description": "Resolves the cart–product relationship and stores quantity and customer notes for each item.",
+    "fields": [
+      "cart_id",
+      "product_id",
+      "quantity",
+      "customer_notes"
+    ],
+    "pk": [
+      "cart_id",
+      "product_id"
+    ],
+    "fk": {
+      "cart_id": "Cart",
+      "product_id": "Product"
+    },
+    "derived": []
+  },
+  {
+    "name": "Order",
+    "domain": "ordering",
+    "description": "The checkout record linking a cart, dispatch zone, optional voucher, and payment. Its status reflects the statuses of its suborders.",
+    "fields": [
+      "order_id",
+      "date",
+      "status",
+      "discount_value",
+      "cart_id",
+      "zone_id",
+      "voucher_id",
+      "payment_id"
+    ],
+    "pk": [
+      "order_id"
+    ],
+    "fk": {
+      "cart_id": "Cart",
+      "zone_id": "Zone",
+      "voucher_id": "Voucher",
+      "payment_id": "Payment"
+    },
+    "derived": [
+      "status"
+    ]
+  },
+  {
+    "name": "Sub_Order",
+    "domain": "ordering",
+    "description": "A business-specific part of an order. The suborder number is identified together with the parent order.",
+    "fields": [
+      "sub_order_number",
+      "order_id",
+      "status",
+      "total_amount",
+      "business_id"
+    ],
+    "pk": [
+      "sub_order_number",
+      "order_id"
+    ],
+    "fk": {
+      "order_id": "Order",
+      "business_id": "Business"
+    },
+    "derived": []
+  },
+  {
+    "name": "Delivery",
+    "domain": "fulfillment",
+    "description": "Tracks the rider and timing for a specific suborder.",
+    "fields": [
+      "delivery_id",
+      "date",
+      "leaves_at",
+      "arrives_at",
+      "duration",
+      "sub_order_number",
+      "order_id",
+      "rider_id"
+    ],
+    "pk": [
+      "delivery_id"
+    ],
+    "fk": {
+      "sub_order_number": "Sub_Order",
+      "order_id": "Sub_Order",
+      "rider_id": "Rider"
+    },
+    "derived": [
+      "duration"
+    ]
+  },
+  {
+    "name": "Payment",
+    "domain": "fulfillment",
+    "description": "Records the amount, currency, method, and date of an order’s payment.",
+    "fields": [
+      "payment_id",
+      "amount",
+      "currency",
+      "method",
+      "date"
+    ],
+    "pk": [
+      "payment_id"
+    ],
+    "fk": {},
+    "derived": []
+  },
+  {
+    "name": "Feedback",
+    "domain": "fulfillment",
+    "description": "A headline, description, and rating for an individual suborder.",
+    "fields": [
+      "feedback_id",
+      "headline",
+      "description",
+      "rating",
+      "sub_order_number",
+      "order_id"
+    ],
+    "pk": [
+      "feedback_id"
+    ],
+    "fk": {
+      "sub_order_number": "Sub_Order",
+      "order_id": "Sub_Order"
+    },
+    "derived": []
+  },
+  {
+    "name": "Voucher",
+    "domain": "zones",
+    "description": "A customer’s one-use discount, including its code, expiry, type, amount, and used flag.",
+    "fields": [
+      "voucher_id",
+      "promo_code",
+      "expiration_date",
+      "discount_amount",
+      "discount_type",
+      "used",
+      "customer_id"
+    ],
+    "pk": [
+      "voucher_id"
+    ],
+    "fk": {
+      "customer_id": "Customer"
+    },
+    "derived": []
+  },
+  {
+    "name": "Zone",
+    "domain": "zones",
+    "description": "The geographic area, fixed delivery fee, and assigned administrative accounts.",
+    "fields": [
+      "zone_id",
+      "name",
+      "delivery_fee",
+      "super_admin_id",
+      "zone_admin_id"
+    ],
+    "pk": [
+      "zone_id"
+    ],
+    "fk": {
+      "super_admin_id": "Admin",
+      "zone_admin_id": "Admin"
+    },
+    "derived": []
+  }
+]
