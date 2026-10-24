@@ -52,8 +52,8 @@ syncTheme();
 toggle?.addEventListener('click', changeTheme);
 const filters=[...document.querySelectorAll('[data-filter]')];const cards=[...document.querySelectorAll('.project-card')];
 function applyFilter(value){filters.forEach(b=>{const active=b.dataset.filter===value;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});cards.forEach(c=>c.hidden=value!=='all'&&c.dataset.category!==value);const count=document.querySelector('.project-count');if(count){const visibleCount=cards.filter(c=>!c.hidden).length;count.textContent=visibleCount+' '+(visibleCount===1?'project':'projects');}}
-const filterHashes={all:'#projects',academic:'#academic-projects',independent:'#independent-projects'};
-const hashFilters={'#academic-projects':'academic','#independent-projects':'independent'};
+const filterHashes={all:'#projects',guc:'#guc-projects',independent:'#independent-projects'};
+const hashFilters={'#guc-projects':'guc','#academic-projects':'guc','#independent-projects':'independent'};
 filters.forEach(b=>b.addEventListener('click',()=>{applyFilter(b.dataset.filter);history.replaceState(null,'',filterHashes[b.dataset.filter]||'#projects')}));
 function filterHash(){if(filters.length)applyFilter(hashFilters[location.hash]||'all')};filterHash();addEventListener('hashchange',filterHash);
 const sectionLinks=[...document.querySelectorAll('.project-sidebar nav a')];
