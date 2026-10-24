@@ -42,3 +42,7 @@
 @keyframes greeting-cursor-travel{from{left:0}to{left:100%}}
 @keyframes greeting-cursor-blink{0%,100%{opacity:1}50%{opacity:0}}
 @media(prefers-reduced-motion:reduce){.greeting-text{clip-path:none;animation:none}.greeting-typewriter::after{display:none}}
+
+/* Project categories remain readable when the filters wrap on small screens. */
+.project-filters{flex-wrap:wrap;max-width:100%}
+.project-toolbar{flex-wrap:wrap}

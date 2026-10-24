@@ -51,8 +51,10 @@ async function changeTheme() {
 syncTheme();
 toggle?.addEventListener('click', changeTheme);
 const filters=[...document.querySelectorAll('[data-filter]')];const cards=[...document.querySelectorAll('.project-card')];
-function applyFilter(value){filters.forEach(b=>{const active=b.dataset.filter===value;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});cards.forEach(c=>c.hidden=value!=='all'&&c.dataset.category!==value);const count=document.querySelector('.project-count');if(count)count.textContent=cards.filter(c=>!c.hidden).length+' projects';}
-filters.forEach(b=>b.addEventListener('click',()=>{applyFilter(b.dataset.filter);history.replaceState(null,'',b.dataset.filter==='all'?'#projects':b.dataset.filter==='large'?'#large-projects':'#small-projects')}));
-function filterHash(){if(filters.length)applyFilter(location.hash==='#large-projects'?'large':location.hash==='#small-projects'?'small':'all')};filterHash();addEventListener('hashchange',filterHash);
+function applyFilter(value){filters.forEach(b=>{const active=b.dataset.filter===value;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});cards.forEach(c=>c.hidden=value!=='all'&&c.dataset.category!==value);const count=document.querySelector('.project-count');if(count){const visibleCount=cards.filter(c=>!c.hidden).length;count.textContent=visibleCount+' '+(visibleCount===1?'project':'projects');}}
+const filterHashes={all:'#projects',academic:'#academic-projects',independent:'#independent-projects'};
+const hashFilters={'#academic-projects':'academic','#independent-projects':'independent'};
+filters.forEach(b=>b.addEventListener('click',()=>{applyFilter(b.dataset.filter);history.replaceState(null,'',filterHashes[b.dataset.filter]||'#projects')}));
+function filterHash(){if(filters.length)applyFilter(hashFilters[location.hash]||'all')};filterHash();addEventListener('hashchange',filterHash);
 const sectionLinks=[...document.querySelectorAll('.project-sidebar nav a')];
 if(sectionLinks.length&&'IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){sectionLinks.forEach(a=>{const active=a.hash==='#'+e.target.id;a.classList.toggle('section-active',active);if(active)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current')})}})},{rootMargin:'-15% 0px -65% 0px'});sectionLinks.forEach(a=>{const target=document.getElementById(a.hash.slice(1));if(target)observer.observe(target)})}
